@@ -1,23 +1,85 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { MenuItems } from "./MenuItems";
 import { faBars, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import logo from "../assets/favicon.png";
 
 const NavBar = () => {
   const [clicked, setClicked] = useState(false);
+
   const handleMenuClick = () => {
     setClicked(!clicked);
   };
 
+  useEffect(() => {
+    const canvas = document.getElementById("logoCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const width = canvas.width;
+    const height = canvas.height;
+
+    const textFont = "40px 'Josefin Sans', sans-serif";
+    const kFont = " 44px 'Josefin Sans', sans-serif";
+    const kColor = "#25e29a";
+    const textColor = "#000";
+
+    const animationInterval = 20000;
+
+    ctx.font = textFont;
+
+    const textWidth = ctx.measureText("endroo Dot IO").width;
+    const textHeight = 40;
+    const centerX = width / 2;
+    const centerY = height / 2 + textHeight / 4;
+
+    const startX = centerX - (textWidth + 20) / 2;
+    let kPosition = width + 30;
+    const endPosition = startX;
+
+    const speed = 4;
+
+    const drawLogo = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw "endroo" text
+      ctx.font = textFont;
+      ctx.fillStyle = textColor;
+      ctx.fillText("endroo Dot IO", startX + 25, centerY);
+
+      // Draw the animated "K"
+      ctx.font = kFont;
+      ctx.fillStyle = kColor;
+      ctx.fillText("K", kPosition, centerY);
+
+      if (kPosition > endPosition) {
+        kPosition -= speed;
+        requestAnimationFrame(drawLogo);
+      } else {
+        ctx.fillText("K", endPosition, centerY);
+        setTimeout(() => {
+          kPosition = width + 30;
+          requestAnimationFrame(drawLogo);
+        }, animationInterval);
+      }
+    };
+
+    drawLogo();
+  }, []);
+
   return (
-    <nav className="fixed top-0 left-1/2 transform -translate-x-1/2 w-full h-20 px-8 flex items-center justify-between bg-white shadow-xl z-50">
-      <Link className="flex items-center justify-center space-x-2" to="/">
-        <img src={logo} alt="Logo" className="w-8 h-10" />
-        <h1 className="text-2xl text-gray-800 cursor-pointer">
-          kendroo Dot IO
-        </h1>
+    <nav className="fixed top-0 left-1/2 transform -translate-x-1/2 w-full h-20 px-8 flex items-center justify-between bg-white shadow-xl z-50 ">
+      <Link
+        className="no-underline cursor-pointer w-36 lg:w-44 h-full active"
+        to="/"
+      >
+        <div className="w-full h-full flex items-center">
+          <canvas
+            id="logoCanvas"
+            width="310"
+            height="100"
+            className="align-middle w-[240px] h-[80px]"
+          ></canvas>
+        </div>
       </Link>
       <div className="lg:hidden cursor-pointer" onClick={handleMenuClick}>
         <FontAwesomeIcon
@@ -47,7 +109,6 @@ const NavBar = () => {
                 />
               )}
             </Link>
-            {/* Submenu for desktop: visible on hover */}
             {item.subMenu && (
               <ul className="absolute top-10 left-0 w-72 bg-white shadow-lg rounded-md z-20 hidden group-hover:block">
                 {item.subMenu.map((subItem, subIndex) => (

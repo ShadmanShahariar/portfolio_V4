@@ -9,6 +9,16 @@
   box-sizing: border-box;
   font-family: "Poppins", serif;
 }
-.App {
-  text-align: center;
+@font-face {
+  font-family: "Josefin Sans";
+  src: url("./assets/fonts/JosefinSans-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Josefin Sans";
+  src: url("./assets/fonts/JosefinSans-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
 }
